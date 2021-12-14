@@ -43,27 +43,29 @@
     <div class="container">
       
       <div id="native-balances" class="col-md-6 container">
-        <h2>Search filters</h2>
+        <h2>NFT Search Engine</h2>
         <div class="mb-3">
+          <input placeholder="(searching for names)" type="text" class="form-control" id="search-param-name" aria-describedby="emailHelp">
+        </div> 
+        <button id="btn-search-name" type="submit" class="btn btn-primary">Search</button>
 
-          <input placeholder="(searching for names)" type="text" class="form-control" id="search-param" aria-describedby="emailHelp">
-        </div> 
+        <div id="resultsByName" class="my-5">
+          <p>placeholder</p>
+        </div>
 
-        <button id="btn-search" type="submit" class="btn btn-primary">Search</button>
         <hr>
+
         <div class="mb-3">
-    
-          <input placeholder="(searching for description)" type="text" class="form-control" id="search-param" aria-describedby="emailHelp">
+          <input placeholder="(searching for description)" type="text" class="form-control" id="search-param-descr" aria-describedby="emailHelp">
         </div> 
-    
-        <button id="btn-search" type="submit" class="btn btn-primary">Search</button>
+        <button id="btn-search-descr" type="submit" class="btn btn-primary">Search</button>
+
         <hr>
+
         <div class="mb-3">
-    
-          <input placeholder="(searching global)" type="text" class="form-control" id="search-param" aria-describedby="emailHelp">
+          <input placeholder="(searching global)" type="text" class="form-control" id="search-param-global" aria-describedby="emailHelp">
         </div> 
-    
-        <button id="btn-search" type="submit" class="btn btn-primary">Search</button>
+        <button id="btn-search-global" type="submit" class="btn btn-primary">Search</button>
       </div>
     </div>
 
