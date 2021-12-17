@@ -1,4 +1,6 @@
-/** Connect to Moralis server */Moralis.start({ serverUrl, appId });
+/** Connect to Moralis server */
+
+Moralis.start({ serverUrl, appId });
 
 async function login() {
   let user = Moralis.User.current();
@@ -23,82 +25,64 @@ document.getElementById("btn-logout").onclick = logout;
 
 document.getElementById("btn-search-name").onclick = searchNFTsByName;
 
+// curl -X 'GET' \
+//   'https://deep-index.moralis.io/api/v2/nft/search?chain=eth&format=decimal&q=abba&filter=name&limit=3' \
+//   -H 'accept: application/json' \
+//   -H 'X-API-Key: KhC2ENlo2K38xHZziBCjVjCVm0C7v7KejLPsV7L0P2YUiiw09fsVZDnCcSuPm9fy'
+
 async function searchNFTsByName() {
   // todo: check min 3 characters
+  // todo: param chain
   let search_param_name = document.getElementById("search-param-name").value;
   // console.log(search_param_name);
   const options = { q: search_param_name, chain: "bsc", filter: "name" };
   // console.log(options);
-
   let resultsByName = document.getElementById('resultsByName')
-  resultsByName.innerText = "";
-  let content = "";
   let results;
 
   try {
     results = await Moralis.Web3API.token.searchNFTs(options);
-    // console.log("results1: ", results);
   } catch (error) {
     console.log(error);
     resultsByName.innerHTML = `<p>No results...</p>`;
     return;
   }
-  console.log(results.result);
   if (results.result.length == 0) {
     resultsByName.innerHTML = `<p>No results...</p>`;
     return;
   }
 
-  // console.log(results.result.length);
-  result = results.result;
-  for (let i = 0; i < result.length && i < 15; i++) {
-    // console.log(i);
-    token_address = result[i].token_address;
-    metadata_name = result[i].metadata;
-    created_at    = result[i].created_at;
-    console.log(token_address, metadata_name, created_at);
+  resultsByName.innerText = "";
+  let content = "";
+  let nfts = results.result;
+  // console.log("nfts: ", nfts);
+  let res = nfts.map((nft) => {
+    let obj = {}; 
+    let parsed = JSON.parse(nft.metadata);
+    obj["name"]  = parsed.name;
+    obj["descr"] = parsed.description;
+    obj["address"] = nft.token_address;
+    obj["created_at"] = nft.created_at;
+    return obj;
+  });
+
+  // console.log(res);
+
+  for(let i = 0; i < res.length && i < 5; i++) {
     const div = document.createElement("div");
-    // div.innerHTML = token_address + metadata_name + created_at;
     div.innerHTML = 
-    `<h6>${token_address}</h6>
-     <p>${created_at.toLocaleString()}</p>
-     <p>${metadata_name}</p>
+    `<h6>${res[i].name}</h6>
+      <p>${res[i].descr}<br>
+      Created at: ${res[i].created_at.toLocaleString()}<br>
+      ${res[i].address}
+      </p>
      <hr/>`
 
     resultsByName.appendChild(div);
   }
-  // renderResults();
+
 }
 
-// // display NFT list...
-// async function renderResults() {
-//   let commentSection = document.getElementById('resultsByName')
-//   commentSection.innerText = "";
-//   let result;
 
-//   // <ul class="list-group">
-//   //   <li class="list-group-item">An item</li>
-//   // </ul>
 
-//   try {
-//       result = await Moralis.Cloud.run("getData", {});
-//   } catch (error) {
-//       commentSection.innerHTML = `
-//                   <p>No comments, you may not have permission to view them</p>
-//                   `
-//       return;
-//   }
-//   if (result) {
-//       for (let i = 0; i < result.length; i++) {
-//           let _user = result[i].attributes.writer;
-//           console.log(result[i])
-//           const content = document.createElement("div")
-//           content.innerHTML = `
-//           <h6>${result[i].get('content')}</h6>
-//           <p>(Posted by ${_user}: ${result[i].get('createdAt').toLocaleString()})</p>
-//                           <hr/>
-//                           `
-//           commentSection.appendChild(content)
-//       }
-//   }
-// }
+// metadata:"{\"name\":\"Abbas\",\"image\":\"ipfs:\\/\\/QmPR1fGgE4XxC2Po9bZPdkwzsrza34Ayyj7FSZ4NcE81N4\\/94.jpg\",\"description\":\"Blocksport is an innovative and leading SportsTech based in Zurich, Switzerland.Our state-of-the-sport NFT platform provides features like NFT and fan token issuance, auction, bidding as well as NFT mining.NFT features:BlocksportNFT Ticket is a membership ticket for Blocksport;Blocksport early member certificate;Blocksport lottery to earn prize (Stars NFT);IDO White list;Additional prize\",\"attributes\":[{\"trait_type\":\"level\",\"value\":\"common\"}]}"
