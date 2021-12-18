@@ -40,6 +40,7 @@ async function searchNFTsByName() {
   let resultsByName = document.getElementById('resultsByName')
   let results;
 
+  // todo: new function to query
   try {
     results = await Moralis.Web3API.token.searchNFTs(options);
   } catch (error) {
@@ -52,6 +53,7 @@ async function searchNFTsByName() {
     return;
   }
 
+  // todo: new function to render
   resultsByName.innerText = "";
   let content = "";
   let nfts = results.result;
@@ -67,7 +69,6 @@ async function searchNFTsByName() {
   });
 
   // console.log(res);
-
   for(let i = 0; i < res.length && i < 5; i++) {
     const div = document.createElement("div");
     div.innerHTML = 
